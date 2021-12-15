@@ -1,16 +1,13 @@
+// Step 11: Use `EditMovieForm.js` as a model to build an `AddMovieForm` component from scratch. The component should hold all the attributes of a new movie in local state.
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+
 
 import axios from 'axios';
 
-const EditMovieForm = (props) => {
+const AddMovieForm = (props) => {
 	const { push } = useHistory();
-	// Step 2: Next, we need to grab the id being passed into the component through the url. Use the `useParams` hook to get the id value.
-
-	const { id } = useParams();
-
-	const { setMovies } = props;
+	
 	const [movie, setMovie] = useState({
 		title:"",
 		director: "",
@@ -20,15 +17,6 @@ const EditMovieForm = (props) => {
 	});
 
     
-// Step 3: We need to be able to load in the current movie's attributes into our local form state. When `EditMovieForm` mount, retrieve our current id's movie from the api and save the data returned to local state. *At this point, nothing happens when the edit form is submitted. Add in the api call needed to update the server with our updated movie data.
-
-    useEffect(()=>{
-        axios.get(`http://localhost:9000/api/movies/${id}`)
-            .then(res=>{
-                setMovie(res.data);
-            })
-	}, [id]);
-	
 	const handleChange = (e) => {
         setMovie({
             ...movie,
@@ -36,12 +24,14 @@ const EditMovieForm = (props) => {
         });
     }
 
+    // Step 14: * In `AddMovieForm,` add an event handler for form submission. When the form is submitted, run the approprate request for adding a movie with the component's state values.
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:9000/api/movies/${id}`, movie)
+        axios.post(`http://localhost:9000/api/movies`, movie)
             .then(res=>{
-                props.setMovies(res.data); // Step 5: Now that we have access to `setMovies`, made sure the updated list of movies is saved to our global state.
-                push(`/movies/${id}`); // Step 6: Redirect the user to the currently edited movie's individual info page.
+                props.setMovies(res.data); 
+                push(`/movies`); 
 			})
 			.catch(err=>{
 				console.log(err);
@@ -55,7 +45,7 @@ const EditMovieForm = (props) => {
 		<div className="modal-content">
 			<form onSubmit={handleSubmit}>
 				<div className="modal-header">						
-					<h4 className="modal-title">Editing <strong>{movie.title}</strong></h4>
+					<h4 className="modal-title">Adding <strong>{movie.title}</strong></h4>
 				</div>
 				<div className="modal-body">					
 					<div className="form-group">
@@ -89,4 +79,4 @@ const EditMovieForm = (props) => {
 	</div>);
 }
 
-export default EditMovieForm;
+export default AddMovieForm;

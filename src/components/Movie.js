@@ -12,7 +12,7 @@ const Movie = (props) => {
     const { push } = useHistory();
 
     useEffect(()=>{
-        axios.get(`http://localhost:5000/api/movies/${id}`)
+        axios.get(`http://localhost:9000/api/movies/${id}`)
             .then(res=>{
                 setMovie(res.data);
             })
@@ -21,6 +21,18 @@ const Movie = (props) => {
             })
     }, [id]);
 
+    // Step 7: *Build an event handler that makes a request to delete the currently viewed movie. Observe what is returned from the request.
+
+    const handleDeleteClick = () =>{
+        axios.delete(`http://localhost:9000/api/movies/${id}`)
+        .then(resp=> {
+           props.deleteMovie(id); // Step 10:  Run `deleteMovie` on the currently selected movie when your delete request is complete and redirect the user to the `/movies` route. 
+           push('/movies');
+        })
+        .catch(err=> {
+            console.log(err.response)
+        })
+    }
     return(<div className="modal-page col">
         <div className="modal-dialog">
             <div className="modal-content">
@@ -52,7 +64,8 @@ const Movie = (props) => {
                         <section>
                             <span className="m-2 btn btn-dark">Favorite</span>
                             <Link to={`/movies/edit/${movie.id}`} className="m-2 btn btn-success">Edit</Link>
-                            <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete"/></span>
+                            {/*Step 6:  Identify the component that holds the "button" needed for deletion. Add an event handler to that button. */}
+                            <span onClick={handleDeleteClick}className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete"/></span>
                         </section>
                     </div>
                 </div>
