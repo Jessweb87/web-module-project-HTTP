@@ -61,7 +61,7 @@ const App = (props) => {
             <Route path="/movies/:id">
               <Movie deleteMovie={deleteMovie}/> {/* Step 9: Pass `deleteMovie` into the appropriate component. */}
             </Route>
- 
+   
             <Route path="/movies">
               <MovieList movies={movies}/>
             </Route>
